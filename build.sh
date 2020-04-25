@@ -50,8 +50,10 @@ for docker_arch in amd64 arm32v6 arm64v8; do
 done
 
 echo "* Download OS architecture qmenu"
+# Get qemu-user-static latest version
+qemu_ver=$(git ls-remote --tags --refs https://github.com/multiarch/qemu-user-static.git | cut -d'v' -f2 | sort -nr 2> /dev/null | head -n1)
 for target_arch in x86_64 arm aarch64; do
-  wget -Nq https://github.com/multiarch/qemu-user-static/releases/download/v4.2.0-7/x86_64_qemu-${target_arch}-static.tar.gz
+  wget -Nq https://github.com/multiarch/qemu-user-static/releases/download/v${qemu_ver}/x86_64_qemu-${target_arch}-static.tar.gz
   tar -xvf x86_64_qemu-${target_arch}-static.tar.gz
 done
 
