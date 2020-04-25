@@ -29,8 +29,8 @@ DOCKER_REPO=$(echo $1 | cut -d'/' -f2)
 if [ $(apt list --installed 2> /dev/null | grep qemu | wc -l) -eq 0 ]; then
   echo "* Running ARM containers"
   sudo apt -y install qemu-user
-  docker run --rm --privileged multiarch/qemu-user-static:register --reset
 fi
+docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 echo "* Create different Dockerfile per architecture"
 for docker_arch in amd64 arm32v6 arm64v8; do
