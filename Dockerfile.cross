@@ -3,7 +3,7 @@ MAINTAINER Jonathan Weisberg <jo.weisberg@gmail.com>
 
 # Git source https://github.com/jazzdd86/phpVirtualbox.git
 __CROSS_COPY qemu-__QEMU_ARCH__-static /usr/bin
-RUN apk --no-cache --update add bash nginx php7-fpm php7-cli php7-common php7-json php7-soap php7-simplexml php7-session \
+RUN apk --no-cache --update add bash tzdata nginx php7-fpm php7-cli php7-common php7-json php7-soap php7-simplexml php7-session \
     && apk --no-cache --update add --virtual build-dependencies wget unzip \
     && wget --no-check-certificate https://github.com/phpvirtualbox/phpvirtualbox/archive/develop.zip -O phpvirtualbox.zip \
     && unzip phpvirtualbox.zip -d phpvirtualbox \
@@ -15,6 +15,7 @@ RUN apk --no-cache --update add bash nginx php7-fpm php7-cli php7-common php7-js
     && echo "<?php return array(); ?>" > /var/www/config-servers.php \
     && echo "<?php return array(); ?>" > /var/www/config-override.php \
     && chown nobody:nobody -R /var/www
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # config files
 COPY config.php /var/www/config.php

@@ -11,10 +11,10 @@ This is a fork of [jazzdd/phpvirtualbox](https://hub.docker.com/r/jazzdd/phpvirt
 ### Docker image platform / architecture
 
 The Docker image to use `joweisberg/phpvirtualbox:latest`.
-Build on Linux Ubuntu 18.04 LTS, Docker 19.03 for:
+Build on Linux Ubuntu 20.04 LTS, Docker 19.03 for:
 - `x86_64` / `amd64`
 - `aarch64` / `arm64v8`
-- `arm` / `arm32v7`
+- `arm` / `arm32v6`
 
 ## Usage
 This image provides the phpVirtualBox web interface that communicates with any number of VirtualBox installations on your computers.
@@ -26,6 +26,7 @@ The container is started with following command:
 ```
 docker run --name vbox_http --restart=always \
     -p 80:80 \
+    -e TZ=Europe/Paris
     -e ID_HOSTPORT=ServerIP:PORT \
     -e ID_NAME=serverName \
     -e ID_USER=vboxUser \
@@ -36,6 +37,7 @@ docker run --name vbox_http --restart=always \
 
 * `-p {OutsidePort}:80` - will bind the webserver to the given host port
 * `-d joweisberg/phpvirtualbox` - the name of this docker image
+* `-e TZ` - name of the TimeZone - ie. "Etc/UTC" or "Europe/Paris" (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 * `-e ID_NAME` - name of the vbox server - display name of the Server in the UI - could be any name
 * `-e ID_HOSTPORT` - ip/hostname and port of the vbox server
 * `-e ID_USER` - user name of the user in the vbox group
@@ -47,6 +49,7 @@ ID is an identifier to get all matching environment variables for one vbox serve
 An example would look as follows:
 ```
 docker run --name vbox_http --restart=always -p 80:80 \
+    -e TZ=Europe/Paris
     -e SRV1_HOSTPORT=192.168.1.1:18083 -e SRV1_NAME=Server1 -e SRV1_USER=user1 -e SRV1_PW='test' \
     -e SRV2_HOSTPORT=192.168.1.2:18083 -e SRV2_NAME=Server2 -e SRV2_USER=user2 -e SRV2_PW='test' \
     -d joweisberg/phpvirtualbox
@@ -85,6 +88,7 @@ To run phpVirtualbox with the vboxwebsrv container use following command:
 
 ```bash
 $ docker run --name vbox_http --restart=unless-stopped -p 80:80 \
+    -e TZ=Europe/Paris
     -e ID_HOSTPORT=$HOST_IP:18083 -e ID_NAME=$HOST -e ID_USER=$VBOX_USR -e ID_PW=$VBOX_PWD \
     -d joweisberg/phpvirtualbox
 ```
@@ -95,6 +99,7 @@ As mentioned before `-e CONF_varName` can override default config values of varN
 
 ```bash
 $ docker run --name vbox_http --restart=unless-stopped -p 80:80 \
+    -e TZ=Europe/Paris
     -e ID_HOSTPORT=$HOST_IP:18083 -e ID_NAME=$HOST -e ID_USER=$VBOX_USR -e ID_PW=$VBOX_PWD \
     -e CONF_vrde=on -e CONF_vrdeport=9000-9010 -e CONF_vrdeaddress= -e CONF_noAuth=true \
     -e CONF_browserRestrictFolders=/data,/home,
@@ -122,33 +127,34 @@ version: "3.5"
 services:
     vbox_http:
         container_name: vbox_http
+        image: joweisberg/phpvirtualbox
         restart: always
-        ports:
-            - "8080:80"
-        environment:
-            SRV1_HOSTPORT: "vbox_websrv_1:18083"
-            SRV1_NAME: "Server1"
-            SRV1_USER: "user1"
-            SRV1_PW: "test"
-            SRV2_HOSTPORT: "192.168.1.2:18083"
-            SRV2_NAME: "Server2"
-            SRV2_USER: "user2"
-            SRV2_PW: "test"
-            SRV2_CONF_browserRestrictFolders: "/data,"
-            SRV2_CONF_authMaster: "true"
-            CONF_browserRestrictFolders: "/home,/usr/lib/virtualbox,"
-            CONF_noAuth: "true"
         depends_on:
             - vbox_websrv
-        image: joweisberg/phpvirtualbox
+        ports:
+            - 8080:80
+        environment:
+            TZ="Europe/Paris"
+            SRV1_HOSTPORT="vbox_websrv_1:18083"
+            SRV1_NAME="Server1"
+            SRV1_USER="user1"
+            SRV1_PW="test"
+            SRV2_HOSTPORT="192.168.1.2:18083"
+            SRV2_NAME="Server2"
+            SRV2_USER="user2"
+            SRV2_PW="test"
+            SRV2_CONF_browserRestrictFolders="/data,"
+            SRV2_CONF_authMaster="true"
+            CONF_browserRestrictFolders="/home,/usr/lib/virtualbox,"
+            CONF_noAuth="true"
 
     vbox_websrv:
         container_name: vbox_websrv_1
-        restart: always
-        volumes:
-            - "./ssh:/root/.ssh"
-        environment:
-            USE_KEY: 1
         image: jazzdd/vboxwebsrv
         command: user1@192.168.1.1
+        restart: always
+        environment:
+            USE_KEY: 1
+        volumes:
+            - "./ssh:/root/.ssh"
 ```
