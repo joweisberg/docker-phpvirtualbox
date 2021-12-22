@@ -11,10 +11,13 @@ This is a fork of [jazzdd/phpvirtualbox](https://hub.docker.com/r/jazzdd/phpvirt
 ### Docker image platform / architecture
 
 The Docker image to use `joweisberg/phpvirtualbox:latest`.
-Build on Linux Ubuntu 20.04 LTS, Docker 19.03 for:
-- `x86_64` / `amd64`
-- `aarch64` / `arm64v8`
-- `arm` / `arm32v6`
+Build on Linux Ubuntu 20.04 LTS, Docker 19.03 and above for:
+
+| Platform | Architecture / Tags |
+|---|---|
+| x86_64 | amd64 |
+| aarch64 | arm64 |
+| arm | arm32 |
 
 ## Usage
 This image provides the phpVirtualBox web interface that communicates with any number of VirtualBox installations on your computers.
