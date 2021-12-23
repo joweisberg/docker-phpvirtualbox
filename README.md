@@ -2,13 +2,18 @@
 
 This is a fork of [jazzdd/phpvirtualbox](https://hub.docker.com/r/jazzdd/phpvirtualbox/), because it is not very up to date and there are no further configuration options. This version is working with phpVirtualBox 6.1
 
-## phpVirtualBox 6.1
+This project:
+
+- GitHub [joweisberg/docker-phpvirtualbox](https://github.com/joweisberg/docker-phpvirtualbox/)
+- Docker Hub [joweisberg/phpvirtualbox](https://hub.docker.com/r/joweisberg/phpvirtualbox/)
+
+# phpVirtualBox 6.1
 
 [phpVirtualBox](http://sourceforge.net/projects/phpvirtualbox/) is a modern web interface that allows you to control remote VirtualBox instances - mirroring the VirtualBox GUI.
 
 ![](http://a.fsdn.com/con/app/proj/phpvirtualbox/screenshots/phpvb1.png)
 
-### Docker image platform / architecture
+## Docker image platform / architecture
 
 The Docker image to use `joweisberg/phpvirtualbox:latest`.
 Build on Linux Ubuntu 20.04 LTS, Docker 19.03 and above for:
@@ -26,8 +31,8 @@ Internally, the phpVirtualBox web interface communicates with each VirtualBox in
 
 The container is started with following command:
 
-```
-docker run --name vbox_http --restart=always \
+```bash
+$ docker run --name vbox_http --restart=always \
     -p 80:80 \
     -e TZ=Europe/Paris
     -e ID_HOSTPORT=ServerIP:PORT \
@@ -50,8 +55,8 @@ docker run --name vbox_http --restart=always \
 ID is an identifier to get all matching environment variables for one vbox server. So, it is possible to define more then one VirtualBox server and manage it with one phpVirtualbox instance.
 
 An example would look as follows:
-```
-docker run --name vbox_http --restart=always -p 80:80 \
+```nash
+$ docker run --name vbox_http --restart=always -p 80:80 \
     -e TZ=Europe/Paris
     -e SRV1_HOSTPORT=192.168.1.1:18083 -e SRV1_NAME=Server1 -e SRV1_USER=user1 -e SRV1_PW='test' \
     -e SRV2_HOSTPORT=192.168.1.2:18083 -e SRV2_NAME=Server2 -e SRV2_USER=user2 -e SRV2_PW='test' \
@@ -116,14 +121,14 @@ $ docker run --name vbox_http --restart=unless-stopped -p 80:80 \
 If an option requires an array but only one parameter is given enter a comma after the option (see option 2).
 
 ## Authentication
+
 The image enables authentication by default. Default login would be admin/admin.
 
 If using multiple servers, there is a need to specify one server as authentication server with e.g. SRV1_CONF_authMaster='true'. If no authMaster is specified, phpVirtualBox uses the first configured server.
 
 If no authentication is used please specify -e CONF_noAuth='true'.
 
-## Docker Compose
-A docker compose file could look as follows (including one vboxwebsrv service):
+## Run the container via docker-compose
 
 ```yml
 version: "3.5"
