@@ -1,12 +1,12 @@
-FROM __BASEIMAGE_ARCH__/alpine:3.15
+FROM __BASEIMAGE_ARCH__/alpine:3.22
 MAINTAINER Jonathan Weisberg <jo.weisberg@gmail.com>
 
 # Git source https://github.com/phpvirtualbox/phpvirtualbox.git
 __CROSS_COPY qemu-__QEMU_ARCH__-static /usr/bin
 RUN apk update && apk upgrade
-RUN apk --no-cache --update add bash tzdata nginx php8-fpm php8-cli php8-common php8-json php8-soap php8-simplexml php8-session \
+RUN apk --no-cache --update add bash tzdata nginx php84-fpm php84-cli php84-common php84-json php84-soap php84-simplexml php84-session \
     && apk --no-cache --update add --virtual build-dependencies wget unzip \
-    && wget --no-check-certificate https://github.com/phpvirtualbox/phpvirtualbox/archive/master.zip -O phpvirtualbox.zip \
+    && wget --no-check-certificate https://github.com/phpvirtualbox/phpvirtualbox/archive/7.2-2.zip -O phpvirtualbox.zip \
     && unzip phpvirtualbox.zip -d phpvirtualbox \
     && mkdir -p /var/www \
     && mv -v phpvirtualbox/*/* /var/www/ \
@@ -27,4 +27,4 @@ COPY servers-from-env.php /servers-from-env.php
 EXPOSE 80
 
 # write linked instances to config, then monitor all services
-CMD php8 /servers-from-env.php && php-fpm8 && nginx
+CMD php84 /servers-from-env.php && php-fpm84 && nginx
