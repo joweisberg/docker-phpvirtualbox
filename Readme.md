@@ -1,13 +1,13 @@
 # docker-phpvirtualbox
 
-This is a fork of [jazzdd/phpvirtualbox](https://hub.docker.com/r/jazzdd/phpvirtualbox/), because it is not very up to date and there are no further configuration options. This version is working with phpVirtualBox 7.1 and above
+This is a fork of [jazzdd/phpvirtualbox](https://hub.docker.com/r/jazzdd/phpvirtualbox/), because it is not very up to date and there are no further configuration options. This version is working with phpVirtualBox 7.2 and above
 
 This project:
 
 - GitHub [joweisberg/docker-phpvirtualbox](https://github.com/joweisberg/docker-phpvirtualbox/)
 - Docker Hub [joweisberg/phpvirtualbox](https://hub.docker.com/r/joweisberg/phpvirtualbox/)
 
-# phpVirtualBox 7.1 and above
+# phpVirtualBox 7.2 and above
 
 [phpVirtualBox](http://sourceforge.net/projects/phpvirtualbox/) is a modern web interface that allows you to control remote VirtualBox instances - mirroring the VirtualBox GUI.
 
@@ -82,7 +82,7 @@ wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-
 wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
 echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" > /etc/apt/sources.list.d/virtualbox.list
 apt update > /dev/null 2>&1
-apt -y install virtualbox-7.1
+apt -y install virtualbox-7.2
 
 echo "* [VirtualBox] Install Extpack"
 vboxversion=$(wget -qO - http://download.virtualbox.org/virtualbox/LATEST.TXT)
