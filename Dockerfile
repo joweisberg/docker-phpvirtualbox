@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1.6
+
+FROM alpine
+MAINTAINER Jonathan Weisberg <jo.weisberg@gmail.com>
+
+# Git source https://github.com/phpvirtualbox/phpvirtualbox.git
+RUN apk update && apk upgrade
+RUN apk --no-cache --update add bash tzdata nginx php84-fpm php84-cli php84-common php84-json php84-soap php84-simplexml php84-session \
+    && apk --no-cache --update add --virtual build-dependencies wget unzip \
+    && wget --no-check-certificate https://github.com/phpvirtualbox/phpvirtualbox/archive/7.2-2.zip -O phpvirtualbox.zip \
+    && unzip phpvirtualbox.zip -d phpvirtualbox \
+    && mkdir -p /var/www \
+    && mv -v phpvirtualbox/*/* /var/www/ \
+    && rm phpvirtualbox.zip \
+    && rm -Rf phpvirtualbox/ \
+    && apk del build-dependencies \
+    && echo "<?php return array(); ?>" > /var/www/config-servers.php \
+    && echo "<?php return array(); ?>" > /var/www/config-override.php \
+    && chown nobody:nobody -R /var/www
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# config files
+COPY config.php /var/www/config.php
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY servers-from-env.php /servers-from-env.php
+
+# expose only nginx HTTP port
+EXPOSE 80
+
+# write linked instances to config, then monitor all services
+CMD php84 /servers-from-env.php && php-fpm84 && nginx
